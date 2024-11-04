@@ -1,12 +1,30 @@
-
-/* 
-
-    You can write your own styles here...
+body{
+    background-image: url('https://images.unsplash.com/photo-1586775490184-b79f0621891f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover; /* La imagen cubrirá toda la pantalla */
+    background-position: center; /* La imagen estará centrada */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* La imagen permanece fija al hacer scroll */
     
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+}
+.card {
+    background-color: rgb(207, 245, 233);
+}
+.dynapuff {
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+    color: rgb(137, 172, 218);
+  }
+  .btn {
+    background-color: rgb(193, 215, 244);
+  }
 
-*/
+  .dancing-script {
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+  }
