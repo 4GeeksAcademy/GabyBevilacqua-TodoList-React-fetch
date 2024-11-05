@@ -3,6 +3,13 @@ import React from "react";
 
 const TodoList = ({ tasks, deleteTask }) => {
 
+    /* 
+    {
+  "label": "string",
+  "is_done": false
+}
+    */
+
   return (
     <ul style={{ listStyleType: "none", padding: 0 }}>
       {tasks.map((task, index) => (
