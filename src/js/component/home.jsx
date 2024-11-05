@@ -8,63 +8,52 @@ const API_BASE_URL = "https://playground.4geeks.com/todo/";
 const Home = () => {
 
 	const [tasks, setTasks] = useState([]);
-	const [newTask, setNewTask] = useState("");
+	const [task, setTask] = useState(""); // This holds the new task's label
 
-
-
-	/* const addNewTask = async () => {
-		try { const newTask ={
-		"label": task,
-		"is_done": false
-			}	
-			const response = await fetch("https://playground.4geeks.com/todo/todos/gaby", {
-			method: "POST",
-			headers:
-			{accept: "application/jason",
-			"Content-Type": "application/jason"},
-			body: JSON.stringify{newTask}
-			
-			}
-			)
-			const result = await response.json()
-			setTask(result.label)
-
-		}catch (error) {
-		console.log(error);
-		}
-		}*/
-
- // Fetch tasks del servidor cuando el componente se monta
- useEffect(() => {
+  // Fetch tasks del server en component mount
+  useEffect(() => {
     fetchTasks();
   }, []);
 
-  // Function para fetch tasks del servidor
+  // Function para fetch tasks
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}todos/users/gaby`);
+      const response = await axios.get(`${API_BASE_URL}todos/user/gaby`);
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
 
-  // Function para agregar un new task
-  const addTask = async () => {
-    if (newTask.trim() === "") return;
-
-    const newTaskObject = {
-      label: newTask.trim(),
-      is_done: false,
-    };
+  // Function para añadir a new task
+  const addNewTask = async () => {
+    if (task.trim() === "") return; // Prevent empty tasks
 
     try {
-      const updatedTasks = [...tasks, newTaskObject];
-      await axios.put(`${API_BASE_URL}todos/users/gaby`, updatedTasks);
-      setTasks(updatedTasks); // actualiza el estado de los tasks
-      setNewTask(""); //  Limpia el input
+      const newTask = {
+        label: task,
+        is_done: false
+      };
+
+      const response = await fetch(`${API_BASE_URL}todos/gaby`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newTask)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add new task");
+      }
+
+      const result = await response.json();
+      setTasks((prevTasks) => [...prevTasks, result]); // Update tasks with the new task
+      setTask(""); // Clear input field
+
     } catch (error) {
-      console.error("Error adding task:", error);
+      console.error("Error adding new task:", error);
     }
   };
 
@@ -73,8 +62,8 @@ const Home = () => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
 
     try {
-      await axios.put(`${API_BASE_URL}todos/users/gaby`, updatedTasks);
-      setTasks(updatedTasks);
+      await axios.put(`${API_BASE_URL}todos/user/gaby`, updatedTasks);
+      setTasks(updatedTasks); // Update tasks state
 
       Swal.fire({
         title: "Bien hecho!",
@@ -86,10 +75,10 @@ const Home = () => {
     }
   };
 
-  // Function to clear all tasks
+  // Function para limpiar tasks
   const clearAllTasks = async () => {
     try {
-      await axios.put(`${API_BASE_URL}todos/users/gaby`, []);
+      await axios.put(`${API_BASE_URL}todos/user/gaby`, []);
       setTasks([]); // limpia los tasks en el front end tambien
 
       Swal.fire({
@@ -114,13 +103,13 @@ const Home = () => {
 					className="text-center rounded"
 					type="text"
 					placeholder="Añade una nueva tarea"
-					value={newTask}
-					onChange={(e) => setNewTask(e.target.value)}
+					value={task}
+					onChange={(e) => setTask(e.target.value)}
 				/>
 				<button
 					type="button"
 					className="btn btn-outline-secondary mt-4"
-					onClick={addTask}>
+					onClick={addNewTask}>
 					<i className="fas fa-plus-circle me-2"></i>
 					Agregar
 				</button>
