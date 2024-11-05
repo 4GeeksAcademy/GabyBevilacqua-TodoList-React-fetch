@@ -1,5 +1,5 @@
 body{
-    background-image: url('https://images.unsplash.com/photo-1586775490184-b79f0621891f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-image: url('https://images.unsplash.com/photo-1727255958110-0edaec0a2d78?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover; /* La imagen cubrirá toda la pantalla */
     background-position: center; /* La imagen estará centrada */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
@@ -7,7 +7,8 @@ body{
     
 }
 .card {
-    background-color: rgb(207, 245, 233);
+    background-color: rgb(223, 214, 242);
+    margin-top: 6%;
 }
 .dynapuff {
     font-family: "DynaPuff", system-ui;
