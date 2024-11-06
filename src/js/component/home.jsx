@@ -57,6 +57,31 @@ const Home = () => {
 			console.error("Error agregando new task:", error);
 		}
 	};
+	// funcion para editar una tarea
+	const editTask = async (id) => {
+		try {
+			const body = {
+				label: task,
+				is_done: true
+			}
+
+			const response = await fetch(`${API_BASE_URL}todos/${id}`, {
+				method: "PUT",
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(body)
+			})
+			if (!response.ok) {
+				alert("No se puedo editar la tarea");
+			}
+			alert("Se edito la tarea")
+		}
+		catch (error) {
+			console.log(error);
+		}
+	}
 
 	// Function para borrar un task a traves del index
 	const deleteTask = async (taskId) => {
@@ -94,29 +119,31 @@ const Home = () => {
 				<h1 className="card-title mb-3 mt-5 dynapuff">
 					Lista de Tareas
 				</h1>
-				<input
-					className="text-center rounded"
-					type="text"
-					placeholder="Añade una nueva tarea"
-					value={task}
-					onChange={(e) => setTask(e.target.value)}
-				/>
+				<div className="container d-flex justify-content-center align-items-center">
+					<input
+						className="text-center rounded"
+						type="text"
+						placeholder="Añade una nueva tarea"
+						value={task}
+						onChange={(e) => setTask(e.target.value)}
+					/>
+					<button
+						type="button"
+						className="btn btn-success ms-2"
+						style={{ borderRadius: "50%" }}
+						onClick={addNewTask}>
+						<i className="fas fa-plus-circle"></i>
+					</button>
+				</div>
+				<TodoList tasks={tasks} deleteTask={(id) => deleteTask(id)} />
 				<button
 					type="button"
-					className="btn btn-success mt-3"
-					onClick={addNewTask}>
-					<i className="fas fa-plus-circle me-2"></i>
-					Agregar
-				</button>
-				<button
-					type="button"
-					className="btn btn-danger mt-2"
+					className="btn btn-danger"
 					onClick={clearAllTasks}>
 					<i className="far fa-trash-alt me-2"></i>
 					Limpiar
 				</button>
-				<TodoList tasks={tasks} deleteTask={(id) => deleteTask(id)} />
-				<p className="dancing-script mb-5">{tasks.length} Tareas pendientes</p>
+				<p className="dancing-script mt-2 mb-5">{tasks.length} Tareas pendientes</p>
 			</div>
 		</>
 	);
