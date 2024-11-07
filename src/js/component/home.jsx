@@ -14,7 +14,7 @@ const Home = () => {
 		fetchTasks();
 	}, []);
 
-	// Function para fetch tasks
+	// Function para traer las tareas guardadas en el servidor
 	const fetchTasks = async () => {
 		try {
 			const response = await fetch(`${API_BASE_URL}users/gaby`);
@@ -26,17 +26,15 @@ const Home = () => {
 			console.error("Error fetching tasks:", error);
 		}
 	};
-
-	// Function para añadir a new task
+	// Function para añadir nueva tarea
 	const addNewTask = async () => {
-		if (task.trim() === "") return; // Previene tasks vacios
+		if (task.trim() === "") return; // Previene tareas vacias
 
 		try {
 			const newTask = {
 				label: task,
 				is_done: false
 			};
-
 			const response = await fetch(`${API_BASE_URL}todos/gaby`, {
 				method: "POST",
 				headers: {
@@ -48,7 +46,6 @@ const Home = () => {
 			if (!response.ok) {
 				throw new Error("Fallo al agregar new task");
 			}
-
 			const result = await response.json();
 			setTasks((prevTasks) => [...prevTasks, result]); // Update tasks con el nuevo task
 			setTask(""); // limpia el campo input 
@@ -58,39 +55,60 @@ const Home = () => {
 		}
 	};
 	// funcion para editar una tarea
-	const editTask = async (id) => {
-		try {
-			const body = {
-				label: task,
-				is_done: true
-			}
+	const editTask = async (task) => {
 
-			const response = await fetch(`${API_BASE_URL}todos/${id}`, {
-				method: "PUT",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(body)
-			})
-			if (!response.ok) {
-				alert("No se puedo editar la tarea");
+		Swal.fire({   // alerta con el input para editar la tarea y guardarla en el servidor
+			title: "Edita tu tarea.",
+			input: "text",
+			inputValue: task.label,
+			inputAttributes: {
+				autocapitalize: "off"
+			},
+			showCancelButton: true,
+			confirmButtonText: "Salvar",
+			showLoaderOnConfirm: true,
+			preConfirm: async (newText) => {
+
+				try {
+					const response = await fetch(`${API_BASE_URL}todos/${task.id}`, {
+						method: "PUT",
+						headers: {
+							"Accept": "application/json",
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							label: newText,
+							is_done: true,
+						})
+					})
+					if (!response.ok) {
+						throw new Error ("Error al editar la tarea");
+					}
+					return response.json();
+				} catch (error) {
+					Swal.showValidationMessage(`
+				  Request failed: ${error}
+				`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+					title: "Tarea editada",
+				});
+				fetchTasks();
 			}
-			alert("Se edito la tarea")
-		}
-		catch (error) {
-			console.log(error);
-		}
+		});
 	}
-
-	// Function para borrar un task a traves del index
+	// Function para borrar una tarea a traves del index
 	const deleteTask = async (taskId) => {
 
 		try {
 			const response = await fetch(`${API_BASE_URL}todos/${taskId}`, {
 				method: "DELETE",
 			});
-			// revisa si la response fue successful
+			// revisa si la respuesta fue successful
 			if (response.ok) {
 				// Re-fetch las tasks del servidor para asegurar que la lista esta sincronizando
 				await fetchTasks();
@@ -106,7 +124,7 @@ const Home = () => {
 			console.error("Error borrando task:", error);
 		}
 	};
-	// Function para limpiar todos tasks
+	// Function para limpiar todas las tareas
 	const clearAllTasks = async () => {
 		tasks.forEach((task) => {
 			deleteTask(task.id)
@@ -135,7 +153,7 @@ const Home = () => {
 						<i className="fas fa-plus-circle"></i>
 					</button>
 				</div>
-				<TodoList tasks={tasks} deleteTask={(id) => deleteTask(id)} />
+				<TodoList tasks={tasks} deleteTask={(id) => deleteTask(id)} editTask={editTask} />
 				<button
 					type="button"
 					className="btn btn-danger"
